@@ -951,9 +951,11 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
  - (void)method0333 {
 #if !TARGET_OS_WATCH
  // Resolve with Macro for extension
- //UIApplication *app = [UIApplication sharedApplication];
+ /*
+ UIApplication *app = [UIApplication sharedApplication];
  // Disable idle timer.
- //app.idleTimerDisabled = YES;
+ app.idleTimerDisabled = YES;
+  */
  // Increase brightness.
  [[UIScreen mainScreen] setBrightness:1.0];
  
