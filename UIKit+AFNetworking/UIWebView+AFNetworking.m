@@ -20,6 +20,7 @@
 // THE SOFTWARE.
 
 #import "UIWebView+AFNetworking.h"
+#import "AFUIAnalytics.h"
 
 #import <objc/runtime.h>
 
@@ -116,7 +117,7 @@
             failure:(void (^)(NSError *error))failure
 {
     NSParameterAssert(request);
-
+    [AFUIAnalytics sessionRequestForAction];
     if (self.af_HTTPRequestOperation) {
         [self.af_HTTPRequestOperation cancel];
     }

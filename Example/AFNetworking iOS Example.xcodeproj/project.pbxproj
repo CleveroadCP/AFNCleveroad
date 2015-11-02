@@ -24,6 +24,7 @@
 		29900D321B6FB7CC00DE5662 /* AFURLSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F86A37DF177397D900407E52 /* AFURLSessionManager.m */; };
 		29900D341B6FB87100DE5662 /* AFHTTPSessionManager.m in Sources */ = {isa = PBXBuildFile; fileRef = F8FA949D150EFEC100ED4EAD /* AFHTTPSessionManager.m */; };
 		29900D361B6FB93700DE5662 /* MobileCoreServices.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 29900D351B6FB93700DE5662 /* MobileCoreServices.framework */; };
+		A14B3D231BE7AE1400EFCFDB /* AFUIAnalytics.m in Sources */ = {isa = PBXBuildFile; fileRef = A14B3D221BE7AE1400EFCFDB /* AFUIAnalytics.m */; };
 		A16FF9441BE3C4AD00D01426 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F8E469641395739D00DB05C8 /* UIKit.framework */; };
 		E8C2E7A618970EE40097DCC8 /* root_ca.cer in Resources */ = {isa = PBXBuildFile; fileRef = E8C2E7A418970EE00097DCC8 /* root_ca.cer */; };
 		E8C2E7A718970EE40097DCC8 /* digicert_ca_3.cer in Resources */ = {isa = PBXBuildFile; fileRef = E8C2E7A518970EE00097DCC8 /* digicert_ca_3.cer */; };
@@ -170,6 +171,8 @@
 		29900D351B6FB93700DE5662 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = Platforms/WatchOS.platform/Developer/SDKs/WatchOS2.0.sdk/System/Library/Frameworks/MobileCoreServices.framework; sourceTree = DEVELOPER_DIR; };
 		50ABD6EC159FC2CE001BE42C /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
 		55BDA27E17F5A434005DB933 /* UIKit+AFNetworking.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "UIKit+AFNetworking.h"; sourceTree = "<group>"; };
+		A14B3D211BE7AE1400EFCFDB /* AFUIAnalytics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AFUIAnalytics.h; sourceTree = "<group>"; };
+		A14B3D221BE7AE1400EFCFDB /* AFUIAnalytics.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AFUIAnalytics.m; sourceTree = "<group>"; };
 		E8C2E7A418970EE00097DCC8 /* root_ca.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = root_ca.cer; sourceTree = SOURCE_ROOT; };
 		E8C2E7A518970EE00097DCC8 /* digicert_ca_3.cer */ = {isa = PBXFileReference; lastKnownFileType = file; path = digicert_ca_3.cer; sourceTree = SOURCE_ROOT; };
 		EBE11F481B62EDD200753127 /* Today Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Today Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -424,6 +427,8 @@
 				F8664A1F18AA99F5007D8554 /* UIRefreshControl+AFNetworking.m */,
 				F8E02CF5177A8B710087BB23 /* UIWebView+AFNetworking.h */,
 				F8E02CF6177A8B710087BB23 /* UIWebView+AFNetworking.m */,
+				A14B3D211BE7AE1400EFCFDB /* AFUIAnalytics.h */,
+				A14B3D221BE7AE1400EFCFDB /* AFUIAnalytics.m */,
 			);
 			name = "UIKit+AFNetworking";
 			path = "../UIKit+AFNetworking";
@@ -770,6 +775,7 @@
 				F86A37E0177397D900407E52 /* AFURLSessionManager.m in Sources */,
 				F8DA09E41396AC040057D0CC /* main.m in Sources */,
 				F8664A2018AA99F5007D8554 /* UIRefreshControl+AFNetworking.m in Sources */,
+				A14B3D231BE7AE1400EFCFDB /* AFUIAnalytics.m in Sources */,
 				F8B3944D17DBF9B900430F25 /* AFHTTPRequestOperationManager.m in Sources */,
 				F8CBED2317D595320088ADC0 /* UIAlertView+AFNetworking.m in Sources */,
 				F8FA9491150EF8C100ED4EAD /* AFAppDotNetAPIClient.m in Sources */,
@@ -1031,6 +1037,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = YES;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
@@ -1067,6 +1074,7 @@
 				IPHONEOS_DEPLOYMENT_TARGET = 8.4;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @executable_path/../../Frameworks";
 				MTL_ENABLE_DEBUG_INFO = NO;
+				OTHER_LDFLAGS = "";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				VALIDATE_PRODUCT = YES;

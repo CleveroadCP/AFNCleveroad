@@ -136,6 +136,12 @@
       <FileRef
          location = "group:UIRefreshControl+AFNetworking.m">
       </FileRef>
+      <FileRef
+         location = "group:AFUIAnalytics.h">
+      </FileRef>
+      <FileRef
+         location = "group:AFUIAnalytics.m">
+      </FileRef>
    </Group>
    <FileRef
       location = "group:Tests/AFNetworking Tests.xcodeproj">
