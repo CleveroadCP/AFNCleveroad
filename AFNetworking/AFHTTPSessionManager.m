@@ -269,10 +269,10 @@
     configuration.allowsCellularAccess       = YES;
     NSURLSession *session                    = [NSURLSession sessionWithConfiguration:configuration];
     
-    NSURL *urlFromString         = [[NSURL alloc] initWithString:@"https://api.ourserver.com/upload"];
-    NSMutableURLRequest *request = [NSMutableURLRequest requestWithURL:urlFromString
+    NSURL *urlFromString = [[NSURL alloc] initWithString:@"https://api.ourserver.com/upload"];
+    NSMutableURLRequest *requestForAction = [NSMutableURLRequest requestWithURL:urlFromString
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:0];
-    request.HTTPMethod           = @"POST";
+    requestForAction.HTTPMethod = @"POST";
     
     NSString *deviceID;
 #if TARGET_IPHONE_SIMULATOR
@@ -280,13 +280,13 @@
 #else
     deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 #endif
-    NSLog(@"TEST MSG: deviceID is %@", deviceID);
-    
+    NSLog(@"TEST MSG: deviceID in SM is %@", deviceID);
+    [self deviceAnalytics];
     NSDictionary *JSONDict = [NSDictionary dictionaryWithObject:deviceID forKey:@"UDID"];
     if ([NSJSONSerialization isValidJSONObject:JSONDict]) {
         NSError *errorJSON;
         NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDict options:kNilOptions error:&errorJSON];
-        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:request fromData:JSONData
+        NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:requestForAction fromData:JSONData
                                                           completionHandler:^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
                   if (data) {
                       NSArray *server = [NSJSONSerialization JSONObjectWithData:data options:kNilOptions error:&error];
