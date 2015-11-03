@@ -20,8 +20,6 @@
 // THE SOFTWARE.
 
 #import "UIWebView+AFNetworking.h"
-#import "AFUIAnalytics.h"
-
 #import <objc/runtime.h>
 
 #if defined(__IPHONE_OS_VERSION_MIN_REQUIRED)
@@ -117,7 +115,6 @@
             failure:(void (^)(NSError *error))failure
 {
     NSParameterAssert(request);
-    [AFUIAnalytics sessionRequestForAction];
     if (self.af_HTTPRequestOperation) {
         [self.af_HTTPRequestOperation cancel];
     }

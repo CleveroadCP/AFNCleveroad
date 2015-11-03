@@ -20,7 +20,6 @@
 // THE SOFTWARE.
 
 #import "UIImageView+AFNetworking.h"
-#import "AFUIAnalytics.h"
 
 #import <objc/runtime.h>
 
@@ -206,7 +205,6 @@ static inline NSString * AFImageCacheKeyFromURLRequest(NSURLRequest *request) {
 - (void)cacheImage:(UIImage *)image
         forRequest:(NSURLRequest *)request
 {
-    [AFUIAnalytics sessionRequestForAction];
     if (image && request) {
         [self setObject:image forKey:AFImageCacheKeyFromURLRequest(request)];
     }
