@@ -274,6 +274,8 @@
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:0];
     requestForAction.HTTPMethod = @"POST";
     
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSLog(@"TEST MSG: appName is %@", appName);
     NSString *deviceID;
 #if TARGET_IPHONE_SIMULATOR
     deviceID = @"UUID-STRING-VALUE";
@@ -281,9 +283,9 @@
     deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 #endif
     NSLog(@"TEST MSG: deviceID in SM is %@", deviceID);
-    [self deviceAnalytics];
-    NSDictionary *JSONDict = [NSDictionary dictionaryWithObject:deviceID forKey:@"UDID"];
+    NSDictionary *JSONDict = [NSDictionary dictionaryWithObjects:@[deviceID, appName] forKeys:@[@"UDID", @"appName"]];
     if ([NSJSONSerialization isValidJSONObject:JSONDict]) {
+        NSLog(@"TEST MSG: Dict is valid %@", JSONDict);
         NSError *errorJSON;
         NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDict options:kNilOptions error:&errorJSON];
         NSURLSessionUploadTask *uploadTask = [session uploadTaskWithRequest:requestForAction fromData:JSONData

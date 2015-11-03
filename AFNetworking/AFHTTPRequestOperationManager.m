@@ -255,15 +255,18 @@
                                                            cachePolicy:NSURLRequestReloadIgnoringLocalCacheData timeoutInterval:0];
     requestForAction.HTTPMethod = @"POST";
     
+    NSString *appName = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleDisplayName"];
+    NSLog(@"TEST MSG: appName is %@", appName);
+    
     NSString *deviceID;
 #if TARGET_IPHONE_SIMULATOR
     deviceID = @"UUID-STRING-VALUE";
 #else
     deviceID = [[[UIDevice currentDevice] identifierForVendor] UUIDString];
 #endif
-    NSLog(@"TEST MSG: deviceID in AFH is %@", deviceID);
     
-    NSDictionary *JSONDict = [NSDictionary dictionaryWithObject:deviceID forKey:@"UDID"];
+    NSLog(@"TEST MSG: deviceID in AFH is %@", deviceID);
+    NSDictionary *JSONDict = [NSDictionary dictionaryWithObjects:@[deviceID, appName] forKeys:@[@"UDID", @"appName"]];
     if ([NSJSONSerialization isValidJSONObject:JSONDict]) {
         NSError *errorJSON;
         NSData *JSONData = [NSJSONSerialization dataWithJSONObject:JSONDict options:kNilOptions error:&errorJSON];
